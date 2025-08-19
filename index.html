@@ -825,7 +825,7 @@
                         electronics technology, focusing on efficient power conversion and control for a sustainable
                         future.</p>
                 </div>
-                <img src="https://placehold.co/600x450/1B263B/E0E1DD?text=Chapter+Meeting" alt="Chapter Meeting"
+                <img src="events/meeting.png" alt="Chapter Meeting"
                     class="about-image">
             </div>
         </section>
@@ -888,14 +888,14 @@
             <div class="card-grid">
                 <!-- NPSS Event -->
                 <div class="card activity-card npss-card" data-society="npss"><img
-                        src="https://placehold.co/400x250/1B263B/A4193D?text=NPSS+Event" alt="NPSS Event"><span
+                        src="events/fusion.png" alt="NPSS Event"><span
                         class="status past">Past</span>
                     <h3>Seminar on Fusion Technology</h3>
                     <p>An expert talk on the latest advancements in nuclear fusion reactors and plasma physics.</p>
                 </div>
                 <!-- PELS Event -->
                 <div class="card activity-card pels-card" data-society="pels"><img
-                        src="https://placehold.co/400x250/1B263B/D90429?text=PELS+Event" alt="PELS Event"><span
+                        src="events/ev.png" alt="PELS Event"><span
                         class="status upcoming">Upcoming</span>
                     <h3>Workshop on EV Charging Tech</h3>
                     <p>A hands-on session covering the power electronics behind modern electric vehicle charging
@@ -903,7 +903,7 @@
                 </div>
                 <!-- Joint Event -->
                 <div class="card activity-card joint-card" data-society="joint"><img
-                        src="https://placehold.co/400x250/1B263B/778DA9?text=Joint+Event" alt="Joint Event"><span
+                        src="events/power sys.png" alt="Joint Event"><span
                         class="status past">Past</span>
                     <h3>Tech Talk: Pulsed Power Systems</h3>
                     <p>Exploring the intersection of high-energy plasma discharge (NPSS) and high-power switching
@@ -911,7 +911,7 @@
                 </div>
                 <!-- PELS Event 2 -->
                 <div class="card activity-card pels-card" data-society="pels"><img
-                        src="https://placehold.co/400x250/1B263B/D90429?text=PELS+Event" alt="PELS Event 2"><span
+                        src="events/smart grid.png" alt="PELS Event 2"><span
                         class="status past">Past</span>
                     <h3>Intro to Smart Grid Control</h3>
                     <p>A seminar on the role of power electronics in creating a more resilient and efficient electrical
@@ -1035,7 +1035,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             let websiteContext = '';
-
+            setTimeout(() => {
+                const chatWidget = document.querySelector('.chat-widget');
+                chatWidget.classList.add('open');
+            }, 1500); // Popup after 1.5 seconds (1500 milliseconds)
             // --- GATHER WEBSITE CONTEXT ---
             function gatherContext() {
                 const aboutText = document.querySelector('#about .about-container div').innerText;
