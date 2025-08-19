@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IEEE NPSS/PELS Joint Chapter | IEEE SB CEK</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --dark-navy: #0D1B2A;
+            --mid-navy: #1B263B;
+            --light-slate: #E0E1DD;
+            --slate: #778DA9;
+            --pels-red: #D90429; /* From PELS Logo */
+            --npss-maroon: #A4193D; /* From NPSS Logo */
+            --white: #FFFFFF;
+            --font-heading: 'Montserrat', sans-serif;
+            --font-body: 'Roboto', sans-serif;
+            --nav-height: 75px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--dark-navy);
+            color: var(--light-slate);
+            font-family: var(--font-body);
+            line-height: 1.6;
+        }
+        
+        main { padding: 0 10%; }
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: calc(var(--nav-height) + 50px) 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        section.visible { opacity: 1; transform: translateY(0); }
+
+        .section-heading {
+            font-family: var(--font-heading);
+            font-size: clamp(28px, 5vw, 36px);
+            color: var(--white);
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: var(--nav-height);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2.5%; /* Adjusted padding to move logos left */
+            background-color: rgba(13, 27, 42, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .logo-container { display: flex; align-items: center; gap: 15px; }
+        .logo { height: 35px; }
+        .logo-separator {
+            width: 2px;
+            height: 25px;
+            background-color: var(--mid-navy);
+        }
+        .nav-links { list-style: none; display: flex; gap: 35px; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--light-slate);
+            font-weight: 700;
+            font-family: var(--font-heading);
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover, .nav-links a.active { color: var(--white); }
+        .mobile-nav-toggle { display: none; cursor: pointer; }
+        .mobile-nav-toggle .bar { width: 25px; height: 3px; background-color: var(--white); margin: 5px 0; transition: 0.3s; }
+
+        /* --- HERO SECTION --- */
+        #home { text-align: center; }
+        #home h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(36px, 7vw, 64px);
+            color: var(--white);
+            margin-bottom: 15px;
+        }
+        #home .npss-text { color: var(--npss-maroon); }
+        #home .pels-text { color: var(--pels-red); }
+        #home p { font-size: clamp(16px, 2.5vw, 18px); color: var(--slate); max-width: 650px; margin: 0 auto 40px; }
+        .cta-button {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(90deg, var(--npss-maroon), var(--pels-red));
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 700;
+            font-family: var(--font-heading);
+            border-radius: 5px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(217, 4, 41, 0.2);
+        }
+
+        /* --- ABOUT SECTION --- */
+        #about .about-container { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        #about h3 { font-family: var(--font-heading); font-size: 22px; color: var(--white); margin-bottom: 10px; }
+        #about p { color: var(--slate); margin-bottom: 20px; }
+        .about-image { width: 100%; max-width: 450px; border-radius: 8px; justify-self: center; }
+
+        /* --- CARD & FILTER STYLES --- */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .card {
+            background-color: var(--mid-navy);
+            border-radius: 8px;
+            padding: 25px;
+            border-left: 4px solid var(--slate);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        .card:hover { transform: translateY(-5px); background-color: #2a3950; }
+        .card.npss-card { border-left-color: var(--npss-maroon); }
+        .card.pels-card { border-left-color: var(--pels-red); }
+        .card.joint-card { border-left-color: var(--slate); }
+
+        .execom-card h3 { font-family: var(--font-heading); font-size: 20px; color: var(--white); }
+        .execom-card .position { font-size: 16px; color: var(--light-slate); margin-bottom: 10px; }
+        .execom-card .contact { font-size: 14px; color: var(--slate); }
+
+        .activity-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 5px; margin-bottom: 15px; }
+        .activity-card h3 { font-family: var(--font-heading); font-size: 18px; color: var(--white); margin-bottom: 5px; }
+        .activity-card p { font-size: 14px; color: var(--slate); }
+        .status { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; margin-bottom: 10px; }
+        .status.past { background-color: rgba(119, 141, 169, 0.2); color: var(--slate); }
+        .status.upcoming { background-color: rgba(255, 255, 255, 0.2); color: var(--white); }
+        .achievement-card .date { font-size: 14px; color: var(--slate); font-weight: 700; margin-bottom: 10px; }
+
+        /* --- FILTER TABS --- */
+        .filter-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        .filter-btn {
+            padding: 10px 25px;
+            border: 2px solid var(--mid-navy);
+            background-color: transparent;
+            color: var(--slate);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .filter-btn:hover { background-color: var(--mid-navy); color: var(--white); }
+        .filter-btn.active { color: var(--white); }
+        .filter-btn.active.npss { background-color: var(--npss-maroon); border-color: var(--npss-maroon); }
+        .filter-btn.active.pels { background-color: var(--pels-red); border-color: var(--pels-red); }
+        .filter-btn.active.joint { background-color: var(--slate); border-color: var(--slate); }
+
+        /* --- CONTACT & FOOTER --- */
+        #contact { text-align: center; }
+        #contact p { max-width: 600px; margin: 0 auto 40px; color: var(--slate); }
+        .contact-details { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 40px; }
+        .contact-item { font-size: 18px; }
+        .contact-item span { display: block; color: var(--light-slate); font-weight: 700; margin-bottom: 5px; }
+        .social-links { display: flex; justify-content: center; gap: 25px; }
+        .social-links a { color: var(--slate); transition: color 0.3s ease, transform 0.3s ease; }
+        .social-links a:hover { color: var(--white); transform: translateY(-3px); }
+        .social-links svg { width: 28px; height: 28px; }
+        footer { text-align: center; padding: 25px; font-size: 14px; color: var(--slate); border-top: 1px solid var(--mid-navy); }
+
+        /* --- CHATBOT STYLES --- */
+        .chat-widget {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            max-height: 500px;
+            background-color: var(--mid-navy);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: scale(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease-in-out;
+            z-index: 1001;
+        }
+        .chat-widget.open {
+            transform: scale(1);
+        }
+        .chat-header {
+            padding: 15px;
+            background: linear-gradient(90deg, var(--npss-maroon), var(--pels-red));
+            color: var(--white);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            text-align: center;
+        }
+        .chat-history {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .chat-message {
+            padding: 10px 15px;
+            border-radius: 20px;
+            max-width: 80%;
+            line-height: 1.4;
+        }
+        .user-message {
+            background-color: var(--slate);
+            color: var(--dark-navy);
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+        .ai-message {
+            background-color: #2a3950;
+            color: var(--light-slate);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+        .chat-input-area {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid var(--dark-navy);
+        }
+        #chat-input {
+            flex-grow: 1;
+            border: none;
+            padding: 10px;
+            border-radius: 20px;
+            background-color: var(--dark-navy);
+            color: var(--light-slate);
+        }
+        #chat-input:focus {
+            outline: none;
+        }
+        #send-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0 10px;
+        }
+        #send-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--slate);
+            transition: fill 0.3s ease;
+        }
+        #send-btn:hover svg {
+            fill: var(--white);
+        }
+        .chat-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, var(--npss-maroon), var(--pels-red));
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            z-index: 1002;
+        }
+        .chat-fab:hover {
+            transform: scale(1.1);
+        }
+        .chat-fab svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--white);
+        }
+
+        /* --- EVENT GENERATOR STYLES --- */
+        .section-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        .section-heading {
+             margin-bottom: 0;
+             margin-right: 20px;
+        }
+        .ai-button {
+            padding: 8px 20px;
+            border: none;
+            background: linear-gradient(90deg, var(--npss-maroon), var(--pels-red));
+            color: var(--white);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .ai-button:hover {
+            transform: scale(1.05);
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            background-color: var(--mid-navy);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.open .modal-content {
+            transform: scale(1);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-header h3 {
+            font-family: var(--font-heading);
+            color: var(--white);
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--slate);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .generator-form {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .generator-form select, .generator-form input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--dark-navy);
+            border-radius: 5px;
+            background-color: var(--dark-navy);
+            color: var(--light-slate);
+        }
+        #generator-results {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-height: 100px;
+        }
+        .idea-card {
+            background-color: var(--dark-navy);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .idea-card h4 { color: var(--white); }
+        .idea-card p { color: var(--slate); font-size: 14px; }
+        .idea-card .audience { font-style: italic; font-size: 12px; color: var(--pels-red); }
+
+
+        /* --- RESPONSIVENESS --- */
+        @media (max-width: 768px) {
+            main { padding: 0 5%; }
+            .header-left { width: 100%; justify-content: space-between; }
+            .nav-links { position: fixed; top: 0; right: 0; width: min(75vw, 400px); height: 100vh; background-color: var(--mid-navy); flex-direction: column; align-items: center; justify-content: center; gap: 40px; transform: translateX(100%); transition: transform 0.3s ease-in-out; }
+            .nav-links.active { transform: translateX(0); }
+            .mobile-nav-toggle { display: block; z-index: 1001; }
+            .mobile-nav-toggle.active .bar:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+            .mobile-nav-toggle.active .bar:nth-child(2) { opacity: 0; }
+            .mobile-nav-toggle.active .bar:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+            #about .about-container { grid-template-columns: 1fr; }
+            .about-image { grid-row: 1; margin-bottom: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <div class="logo-container">
+                <!-- CEK Logo Added -->
+                <img src="Logo/Copy of logo-white-vect.png" alt="CEK Logo" class="logo">
+                <span class="logo-separator"></span>
+                <!-- Existing Logos -->
+                <img src="Logo/Copy of IEEE BLUE.png" alt="IEEE Logo" class="logo">
+                <span class="logo-separator"></span>
+                <img src="Logo/Copy of NPSS_COLOUR.png" alt="NPSS Logo" class="logo">
+                <span class="logo-separator"></span>
+                <img src="Logo/Copy of pels-logo COLOUR.png" alt="PELS Logo" class="logo">
+            </div>
+            <div class="mobile-nav-toggle"> 
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#execom" class="nav-link">Execom</a></li>
+                <li><a href="#activities" class="nav-link">Activities</a></li>
+                <li><a href="#achievements" class="nav-link">Achievements</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HOME SECTION -->
+        <section id="home">
+            <h1><span class="npss-text">Nuclear & Plasma</span><br>& <span class="pels-text">Power Electronics</span></h1>
+            <p>Welcome to the IEEE NPSS/PELS Joint Chapter of CEK, where we merge the frontiers of high-energy science with the future of sustainable power.</p>
+            <a href="#about" class="cta-button">Discover Our Chapter</a>
+        </section>
+
+        <!-- ABOUT SECTION -->
+        <section id="about">
+            <h2 class="section-heading">About The Joint Chapter</h2>
+            <div class="about-container">
+                <div>
+                    <h3>Our Local Mission</h3>
+                    <p>At IEEE SB CEK, our joint chapter provides a unique platform for students to explore the powerful synergy between Nuclear & Plasma Sciences (NPSS) and Power Electronics (PELS). We host workshops, seminars, and projects that bridge these dynamic fields, from fusion energy to smart grid technology.</p>
+                    <h3>About NPSS Globally</h3>
+                    <p>The IEEE Nuclear and Plasma Sciences Society is a global leader in the advancement of nuclear and plasma sciences, covering areas like particle accelerators, radiation effects, and medical imaging.</p>
+                    <h3>About PELS Globally</h3>
+                    <p>The IEEE Power Electronics Society is dedicated to the development and application of power electronics technology, focusing on efficient power conversion and control for a sustainable future.</p>
+                </div>
+                <img src="https://placehold.co/600x450/1B263B/E0E1DD?text=Chapter+Meeting" alt="Chapter Meeting" class="about-image">
+            </div>
+        </section>
+
+        <!-- EXECOM MEMBERS SECTION -->
+        <section id="execom">
+            <h2 class="section-heading">Executive Committee</h2>
+            <div class="card-grid">
+                <div class="card"><h3 class="execom-card-name">Member Name</h3><p class="position">Chair</p><p class="contact">chair.npsspels.sbcek@ieee.org</p></div>
+                <div class="card"><h3 class="execom-card-name">Member Name</h3><p class="position">Vice-Chair</p><p class="contact">vicechair.npsspels.sbcek@ieee.org</p></div>
+                <div class="card"><h3 class="execom-card-name">Member Name</h3><p class="position">Secretary</p><p class="contact">secretary.npsspels.sbcek@ieee.org</p></div>
+                <div class="card"><h3 class="execom-card-name">Member Name</h3><p class="position">Treasurer</p><p class="contact">treasurer.npsspels.sbcek@ieee.org</p></div>
+                <div class="card"><h3 class="execom-card-name">Member Name</h3><p class="position">Web Master</p><p class="contact">web.npsspels.sbcek@ieee.org</p></div>
+            </div>
+        </section>
+
+        <!-- ACTIVITIES SECTION -->
+        <section id="activities">
+            <div class="section-header">
+                <h2 class="section-heading">Activities</h2>
+                <button class="ai-button" id="open-generator-modal">✨ Generate Event Ideas</button>
+            </div>
+            <div class="filter-tabs">
+                <button class="filter-btn joint active" data-filter="joint">Joint</button>
+                <button class="filter-btn npss" data-filter="npss">NPSS</button>
+                <button class="filter-btn pels" data-filter="pels">PELS</button>
+            </div>
+            <div class="card-grid">
+                <!-- NPSS Event -->
+                <div class="card activity-card npss-card" data-society="npss"><img src="https://placehold.co/400x250/1B263B/A4193D?text=NPSS+Event" alt="NPSS Event"><span class="status past">Past</span><h3>Seminar on Fusion Technology</h3><p>An expert talk on the latest advancements in nuclear fusion reactors and plasma physics.</p></div>
+                <!-- PELS Event -->
+                <div class="card activity-card pels-card" data-society="pels"><img src="https://placehold.co/400x250/1B263B/D90429?text=PELS+Event" alt="PELS Event"><span class="status upcoming">Upcoming</span><h3>Workshop on EV Charging Tech</h3><p>A hands-on session covering the power electronics behind modern electric vehicle charging stations.</p></div>
+                <!-- Joint Event -->
+                <div class="card activity-card joint-card" data-society="joint"><img src="https://placehold.co/400x250/1B263B/778DA9?text=Joint+Event" alt="Joint Event"><span class="status past">Past</span><h3>Tech Talk: Pulsed Power Systems</h3><p>Exploring the intersection of high-energy plasma discharge (NPSS) and high-power switching (PELS).</p></div>
+                <!-- PELS Event 2 -->
+                <div class="card activity-card pels-card" data-society="pels"><img src="https://placehold.co/400x250/1B263B/D90429?text=PELS+Event" alt="PELS Event 2"><span class="status past">Past</span><h3>Intro to Smart Grid Control</h3><p>A seminar on the role of power electronics in creating a more resilient and efficient electrical grid.</p></div>
+            </div>
+        </section>
+        
+        <!-- ACHIEVEMENTS SECTION -->
+        <section id="achievements">
+            <h2 class="section-heading">Achievements</h2>
+            <div class="filter-tabs">
+                <button class="filter-btn joint active" data-filter="joint">Joint</button>
+                <button class="filter-btn npss" data-filter="npss">NPSS</button>
+                <button class="filter-btn pels" data-filter="pels">PELS</button>
+            </div>
+            <div class="card-grid">
+                <!-- Joint Achievement -->
+                <div class="card activity-card joint-card" data-society="joint"><h3>Best Joint Chapter Award</h3><p class="date">2024</p><p>Recognized by IEEE Kerala Section for outstanding collaborative initiatives and member engagement.</p></div>
+                <!-- PELS Achievement -->
+                <div class="card activity-card pels-card" data-society="pels"><h3>Green Energy Hackathon Winner</h3><p class="date">2025</p><p>Our PELS team won first place for their innovative design of a high-efficiency solar inverter.</p></div>
+                <!-- NPSS Achievement -->
+                <div class="card activity-card npss-card" data-society="npss"><h3>Research Paper Publication</h3><p class="date">2025</p><p>An NPSS member's paper on plasma simulation was published in the section's technical journal.</p></div>
+                 <!-- Joint Achievement 2 -->
+                <div class="card activity-card joint-card" data-society="joint"><h3>Highest Membership Growth</h3><p class="date">2025</p><p>Our joint chapter was recognized for achieving the highest percentage growth in membership in the region.</p></div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact">
+            <h2 class="section-heading">Contact Us</h2>
+            <p>Get in touch to learn more about our activities, membership, and collaboration opportunities.</p>
+            <div class="contact-details">
+                <div class="contact-item"><span>Email ID</span>npss-pels.sbcek@ieee.org</div>
+                <div class="contact-item"><span>Phone Number</span>+91 12345 67890</div>
+            </div>
+            <div class="social-links">
+                <a href="#" target="_blank" aria-label="LinkedIn"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>LinkedIn</title><path fill="currentColor" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg></a>
+                <a href="#" target="_blank" aria-label="Instagram"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Instagram</title><path fill="currentColor" d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.314.935 20.644.522 19.854.217 19.09.088 18.22.067 16.947.01 15.667 0 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.06 1.17-.249 1.805-.413 2.227a3.48 3.48 0 01-.896 1.382c-.42.419-.82.679-1.381.896-.422.164-1.057.36-2.227.413-1.266.057-1.646.07-4.85.07s-3.585-.015-4.85-.074c-1.17-.06-1.805-.249-2.227-.413a3.493 3.493 0 01-1.382-.896c-.419-.42-.679-.82-1.381-.896-.164-.422-.36-1.057-.413-2.227-.057-1.266-.07-1.646-.07-4.85s.015-3.585.07-4.85c.06-1.17.249-1.805.413-2.227.217-.562.477-.96.896-1.382.42-.419.819-.679 1.381-.896.422-.164 1.057-.36 2.227-.413C8.415 2.18 8.797 2.16 12 2.16zm0 5.48c-3.14 0-5.69 2.55-5.69 5.69s2.55 5.69 5.69 5.69 5.69-2.55 5.69-5.69-2.55-5.69-5.69-5.69zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.441 1.441 1.441c.795 0 1.44-.645 1.44-1.441s-.645-1.44-1.44-1.44z"/></svg></a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 IEEE NPSS/PELS Joint Chapter, IEEE Student Branch, College of Engineering Karunagappally.</p>
+    </footer>
+
+    <!-- CHATBOT HTML -->
+    <div class="chat-fab">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"></path></svg>
+    </div>
+
+    <div class="chat-widget">
+        <div class="chat-header">AI Assistant</div>
+        <div class="chat-history">
+            <div class="chat-message ai-message">Hello! How can I help you today?</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Ask a question...">
+            <button id="send-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- EVENT GENERATOR MODAL -->
+    <div class="modal-overlay" id="generator-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>✨ Event Idea Generator</h3>
+                <button class="close-modal" id="close-generator-modal">&times;</button>
+            </div>
+            <div class="generator-form">
+                <select id="generator-society">
+                    <option value="Joint NPSS/PELS">Joint</option>
+                    <option value="NPSS">NPSS</option>
+                    <option value="PELS">PELS</option>
+                </select>
+                <input type="text" id="generator-keyword" placeholder="Enter a keyword (e.g., workshop)">
+            </div>
+            <button class="ai-button" id="generate-ideas-btn">Generate</button>
+            <div id="generator-results">
+                <!-- AI Generated ideas will appear here -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let websiteContext = '';
+
+            // --- GATHER WEBSITE CONTEXT ---
+            function gatherContext() {
+                const aboutText = document.querySelector('#about .about-container div').innerText;
+                const execomCards = document.querySelectorAll('#execom .card');
+                let execomRoles = 'The executive committee includes the following roles: ';
+                execomCards.forEach(card => {
+                    const position = card.querySelector('.position').innerText;
+                    execomRoles += `${position}, `;
+                });
+                const contactEmail = document.querySelector('#contact .contact-item span').nextSibling.textContent.trim();
+                
+                websiteContext = `
+                    About the Chapter: ${aboutText}
+                    Executive Committee: ${execomRoles}
+                    Contact Information: The primary email is ${contactEmail}.
+                `;
+            }
+            gatherContext();
+
+
+            // --- MOBILE NAVIGATION ---
+            const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            mobileNavToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                mobileNavToggle.classList.toggle('active');
+            });
+            navLinks.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileNavToggle.classList.remove('active');
+            });
+
+            // --- FADE-IN ANIMATION ON SCROLL ---
+            const sections = document.querySelectorAll('section');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
+                });
+            }, { threshold: 0.1 });
+            sections.forEach(section => observer.observe(section));
+
+            // --- ACTIVE NAV LINK HIGHLIGHTING ---
+            const navLinkElements = document.querySelectorAll('.nav-link');
+            const sectionObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinkElements.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${id}`) link.classList.add('active');
+                        });
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+            sections.forEach(section => sectionObserver.observe(section));
+
+            // --- CONTENT FILTERING LOGIC ---
+            const filterContainers = document.querySelectorAll('.filter-tabs');
+            filterContainers.forEach(container => {
+                const filterButtons = container.querySelectorAll('.filter-btn');
+                const contentGrid = container.nextElementSibling;
+                const contentCards = contentGrid.querySelectorAll('.card');
+
+                // Set initial view to 'joint'
+                filterContent('joint', contentCards, filterButtons);
+
+                filterButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const filter = button.dataset.filter;
+                        filterContent(filter, contentCards, filterButtons);
+                    });
+                });
+            });
+
+            function filterContent(filter, cards, buttons) {
+                // Update button active state
+                buttons.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.filter === filter) {
+                        btn.classList.add('active');
+                    }
+                });
+
+                // Show/hide cards based on filter
+                cards.forEach(card => {
+                    const society = card.dataset.society;
+                    if (filter === 'joint') {
+                        // Show all cards for the "Joint" view
+                        card.style.display = 'block';
+                    } else {
+                        if (society === filter) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    }
+                });
+            }
+
+            // --- CHATBOT LOGIC ---
+            const chatFab = document.querySelector('.chat-fab');
+            const chatWidget = document.querySelector('.chat-widget');
+            const chatHistory = document.querySelector('.chat-history');
+            const chatInput = document.getElementById('chat-input');
+            const sendBtn = document.getElementById('send-btn');
+
+            chatFab.addEventListener('click', () => {
+                chatWidget.classList.toggle('open');
+            });
+
+            const sendMessage = async () => {
+                const messageText = chatInput.value.trim();
+                if (messageText === '') return;
+
+                // Display user message
+                const userMessageElem = document.createElement('div');
+                userMessageElem.classList.add('chat-message', 'user-message');
+                userMessageElem.textContent = messageText;
+                chatHistory.appendChild(userMessageElem);
+
+                chatInput.value = '';
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+                
+                // Display typing indicator
+                const typingIndicator = document.createElement('div');
+                typingIndicator.classList.add('chat-message', 'ai-message');
+                typingIndicator.textContent = '...';
+                chatHistory.appendChild(typingIndicator);
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+
+                const promptWithContext = `You are an AI assistant for the IEEE NPSS/PELS Joint Chapter website. Use the following context to answer the user's question. Be helpful and concise. CONTEXT: ${websiteContext}. USER QUESTION: ${messageText}`;
+
+                // Call Gemini API
+                try {
+                    let chatHistoryForApi = [];
+                    chatHistoryForApi.push({ role: "user", parts: [{ text: promptWithContext }] });
+                    const payload = { contents: chatHistoryForApi };
+                    const apiKey = "AIzaSyDwjlzdpdrSVa93UKz4a8q7VRO4NzOkm7k"; 
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                    
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    const result = await response.json();
+                    let aiResponse = "Sorry, I couldn't get a response. Please try again.";
+                     if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        aiResponse = result.candidates[0].content.parts[0].text;
+                    }
+
+                    // Display AI response
+                    typingIndicator.textContent = aiResponse;
+                    chatHistory.scrollTop = chatHistory.scrollHeight;
+
+                } catch (error) {
+                    console.error("Error fetching AI response:", error);
+                    typingIndicator.textContent = "Error: Could not connect to the AI.";
+                }
+            };
+
+            sendBtn.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            // --- EVENT GENERATOR LOGIC ---
+            const openModalBtn = document.getElementById('open-generator-modal');
+            const closeModalBtn = document.getElementById('close-generator-modal');
+            const modal = document.getElementById('generator-modal');
+            const generateIdeasBtn = document.getElementById('generate-ideas-btn');
+            const resultsContainer = document.getElementById('generator-results');
+
+            openModalBtn.addEventListener('click', () => modal.classList.add('open'));
+            closeModalBtn.addEventListener('click', () => modal.classList.remove('open'));
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('open');
+                }
+            });
+
+            generateIdeasBtn.addEventListener('click', async () => {
+                const society = document.getElementById('generator-society').value;
+                const keyword = document.getElementById('generator-keyword').value;
+
+                resultsContainer.innerHTML = '<p>✨ Generating ideas...</p>';
+                generateIdeasBtn.disabled = true;
+
+                const prompt = `You are an expert in IEEE student chapter activities. Brainstorm 3 creative and engaging event ideas for an IEEE ${society} student chapter. The ideas should be related to the keyword "${keyword}". For each idea, provide a catchy title, a short description (2-3 sentences), and suggest a target audience.`;
+                
+                const schema = {
+                    type: "OBJECT",
+                    properties: {
+                        "event_ideas": {
+                            type: "ARRAY",
+                            items: {
+                                type: "OBJECT",
+                                properties: {
+                                    "title": { "type": "STRING" },
+                                    "description": { "type": "STRING" },
+                                    "audience": { "type": "STRING" }
+                                },
+                                required: ["title", "description", "audience"]
+                            }
+                        }
+                    }
+                };
+                
+                try {
+                    const payload = {
+                        contents: [{ role: "user", parts: [{ text: prompt }] }],
+                        generationConfig: {
+                            responseMimeType: "application/json",
+                            responseSchema: schema
+                        }
+                    };
+                    const apiKey = "AIzaSyDwjlzdpdrSVa93UKz4a8q7VRO4NzOkm7k";
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+                     let ideas = [];
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const jsonText = result.candidates[0].content.parts[0].text;
+                        const parsedJson = JSON.parse(jsonText);
+                        ideas = parsedJson.event_ideas || [];
+                    }
+
+
+                    resultsContainer.innerHTML = '';
+                    if (ideas.length > 0) {
+                         ideas.forEach(idea => {
+                            const card = document.createElement('div');
+                            card.className = 'idea-card';
+                            card.innerHTML = `
+                                <h4>${idea.title}</h4>
+                                <p>${idea.description}</p>
+                                <p class="audience"><strong>Target Audience:</strong> ${idea.audience}</p>
+                            `;
+                            resultsContainer.appendChild(card);
+                        });
+                    } else {
+                         resultsContainer.innerHTML = '<p>Sorry, could not generate ideas. Please try a different keyword.</p>';
+                    }
+
+                } catch (error) {
+                    console.error("Error generating ideas:", error);
+                    resultsContainer.innerHTML = '<p>An error occurred. Please try again later.</p>';
+                } finally {
+                    generateIdeasBtn.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
